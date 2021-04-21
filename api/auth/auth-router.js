@@ -17,19 +17,17 @@ router.post("/register", validateRoleName, (req, res, next) => {
       "role_name": "angel"
     }
    */
-  let user = req.body
-
-  const rounds = process.env.BCRYPT_ROUNDS || 8
-  const hash = bcrypt.hashSync(user.password, rounds)
-
-  user.password = hash
-
-  User.add(user)
-    .then(user => {
-      res.status(201).json(user)
-    })
-    .catch(next)
-});
+    const { username, password } = req.body
+    const { role_name } = req
+    const rounds = process.env.BCRYPT_ROUNDS || 8
+    const hash = bcrypt.hashSync(password, rounds)
+  
+    User.add({ username, password: hash, role_name })
+      .then(user => {
+        res.status(201).json(user)
+      })
+      .catch(next)
+  });
 
 
 router.post("/login", checkUsernameExists, (req, res, next) => {
